@@ -1,4 +1,3 @@
-# peach
 Another hobby os
 
 
