@@ -1,23 +1,37 @@
 #include <stdint.h>
+#include <klib/klib.h>
 
 #include "arch/gdt.h"
 #include "arch/arch.h"
 
 extern int __memory_offset;
 
-static gdt_desc desc = { 0 };
-static uint64_t entries[5] = { 0 };
+static ALIGN(8) gdt_desc desc = { 0 };
+static ALIGN(8) gdt_entry entries[5] = { 0 };
+
+gdt_entry create_gdt_entry(uint32_t base, uint32_t limit, uint8_t granularity, uint8_t flags) {
+	return (gdt_entry) {
+		.limit0_15 = (uint16_t) ((limit) & 0xFFFF),
+		.base0_15 = (uint16_t) ((base) & 0xFFFF),
+		.base16_23 = (uint8_t) (((base) >> 16) & 0xFF),
+		.flags = (flags),
+		.limit16_19 = ((limit) >> 16) & 0x0F,
+		.granularity = (granularity),
+		.base24_31 = (uint8_t) (((base) >> 24) & 0xFF),
+	};
+}
+
+#define bake_entry(flags, granularity) (create_gdt_entry(0, 0, granularity, flags))
 
 void gdt_init() {
-	entries[1] = 0x00209A0000000000;		// code for kernel
-	entries[2] = 0x0000920000000000;		// data for kernel
-        entries[3] = entries[1] | 0x600000000000;	// code for userspace
-        entries[4] = entries[2] | 0x600000000000;	// data for userspace
+	entries[0] = create_gdt_entry(0, 0, 0, 0);
+	entries[1] = bake_entry(GDT_PRESENT | GDT_SEGMENT | GDT_READWRITE | GDT_EXECUTABLE, GDT_LONG_MODE_GRANULARITY);
+	entries[2] = bake_entry(GDT_PRESENT | GDT_SEGMENT | GDT_READWRITE, 0);
+	entries[1] = bake_entry(GDT_PRESENT | GDT_SEGMENT | GDT_READWRITE | GDT_EXECUTABLE | GDT_USER, GDT_LONG_MODE_GRANULARITY);
+        entries[2] = bake_entry(GDT_PRESENT | GDT_SEGMENT | GDT_READWRITE | GDT_USER, 0);
 
-	desc.limit = (3 * 8 - 1);
-	desc.base = (uint64_t) &entries - __memory_offset;
+	desc.size = sizeof(entries) - 1;
+	desc.base = (uint64_t) &entries;
 
-	arch_lgdt((uint64_t) &desc - __memory_offset);
-	arch_set_code_segment(CS_KERNEL);
-	arch_set_data_segments(DS_KERNEL);
+	arch_load_gdt(((uint64_t) &desc) - __memory_offset);
 }

@@ -16,8 +16,8 @@ unsigned long arch_are_interrupts_enabled();
 void arch_nmi_enable();
 void arch_nmi_disable();
 
-void arch_lidt(uint64_t idt);
-void arch_lgdt(uint64_t gdt);
+extern void arch_load_idt(uint64_t idt);
+extern void arch_load_gdt(uint64_t gdt);
 
 void arch_cpuid(int code, uint32_t *a, uint32_t *d);
 

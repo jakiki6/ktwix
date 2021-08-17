@@ -11,6 +11,8 @@
 #include "arch/serial.h"
 #include "kmalloc.h"
 
+extern uint64_t __text_start, __text_end;
+
 void kmain(boot_info *handover) {
 	// disable irq because we don't have idt yet
 	arch_interrupts_disable();

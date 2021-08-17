@@ -1,4 +1,9 @@
+#pragma once
+
 #include <stddef.h>
+
+#define ALIGN(x) __attribute__((aligned(x)))
+#define PACKED __attribute__((packed))
 
 typedef struct {
         size_t pages;

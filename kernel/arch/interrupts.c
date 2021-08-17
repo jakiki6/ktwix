@@ -6,9 +6,6 @@
 #include "arch.h"
 #include "gdt.h"
 
-extern void asm_handler_double_fault();
-extern void asm_handler_page_fault();
-
 idt_desc desc = { 0 };
 idt_entry entries[256] = { 0 };
 
@@ -26,11 +23,8 @@ void register_interrupt(uint64_t handler, uint8_t number, bool user) {
 }
 
 void interrupts_init() {
-	register_interrupt((uint64_t) &asm_handler_double_fault, 0x08, false);
-	register_interrupt((uint64_t) &asm_handler_page_fault, 0x0e, false);
-
 	desc.limit = sizeof(entries) - 1;
 	desc.base = (uint64_t) &entries;
 
-	arch_lidt((uint64_t) &desc);
+	arch_load_idt((uint64_t) &desc);
 }

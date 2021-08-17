@@ -1,6 +1,7 @@
 #include <stdint.h>
 
 #include "arch.h"
+#include "gdt.h"
 
 void arch_outb(uint16_t port, uint8_t val) {
 	asm volatile ("outb %0, %1"::"a"(val), "Nd"(port));
@@ -61,15 +62,6 @@ void arch_nmi_enable() {
 void arch_nmi_disable() {
 	arch_outb(0x70, arch_inb(0x70) | 0x80);
 }
-
-void arch_lidt(uint64_t idt) {
-	asm volatile ("lidt (%0)" : : "r"(idt));
-}
-
-void arch_lgdt(uint64_t gdt) {
-    asm volatile ("lgdt (%0)" : : "r"(gdt));
-}
-
 
 void arch_cpuid(int code, uint32_t *a, uint32_t *d) {
 	asm volatile ("cpuid" : "=a"(*a), "=d"(*d) : "0"(code) : "ebx", "ecx");
@@ -148,7 +140,10 @@ uint64_t arch_rdmsr(uint64_t msr) {
 
 void arch_set_code_segment(uint8_t value) {
 	asm volatile (
-		"mov %%ax, %%cs"
+		"pushq %%rax;"
+		"pushq $set_cs;"
+		"lretq;"
+		"set_cs:"
 		:
 		: "a"(value)
 	);
