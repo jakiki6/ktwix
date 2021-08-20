@@ -1,16 +1,18 @@
+bits 64
 section .text
 
 global arch_load_gdt
 arch_load_gdt:
 	lgdt [rdi]
-	mov ax, 0x10
-	mov ss, ax
+	mov rax, 0x10
 	mov ds, ax
 	mov es, ax
-	mov rax, qword .trampoline
-	push qword 0x8
-	push rax
-	retf
+	mov fs, ax
+	mov gs, ax
+	mov ss, ax
+	push 0x08
+	push .trampoline
+	retq
 .trampoline:
 	ret
 

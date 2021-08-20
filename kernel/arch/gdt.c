@@ -25,8 +25,8 @@ void gdt_init() {
 	entries[0] = create_gdt_entry(0, 0, 0, 0);
 	entries[1] = bake_entry(GDT_PRESENT | GDT_SEGMENT | GDT_READWRITE | GDT_EXECUTABLE, GDT_LONG_MODE_GRANULARITY);
 	entries[2] = bake_entry(GDT_PRESENT | GDT_SEGMENT | GDT_READWRITE, 0);
-	entries[1] = bake_entry(GDT_PRESENT | GDT_SEGMENT | GDT_READWRITE | GDT_EXECUTABLE | GDT_USER, GDT_LONG_MODE_GRANULARITY);
-        entries[2] = bake_entry(GDT_PRESENT | GDT_SEGMENT | GDT_READWRITE | GDT_USER, 0);
+	entries[3] = bake_entry(GDT_PRESENT | GDT_SEGMENT | GDT_READWRITE | GDT_EXECUTABLE | GDT_USER, GDT_LONG_MODE_GRANULARITY);
+        entries[4] = bake_entry(GDT_PRESENT | GDT_SEGMENT | GDT_READWRITE | GDT_USER, 0);
 
 	desc.size = sizeof(entries) - 1;
 	desc.base = (uint64_t) &entries;
