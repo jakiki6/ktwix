@@ -3,8 +3,7 @@ ENTRY(boot_main)
 
 SECTIONS
 {
-    __memory_offset = 0xffffffff80000000;
-    . = __memory_offset + 2M;
+    . = 0xffffffff80000000 + 2M;
     __kernel_start = .;
 
     /* We place the .stivalehdr section containing the header in its own section, */

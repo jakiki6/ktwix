@@ -1,9 +1,12 @@
 #pragma once
 
 #include <stddef.h>
+#include <stdint.h>
 
 #define ALIGN(x) __attribute__((aligned(x)))
 #define PACKED __attribute__((packed))
+
+#define __memory_offset 0xffffffff80000000
 
 typedef struct {
         size_t pages;

@@ -10,7 +10,7 @@ arch_load_gdt:
 	mov rax, qword .trampoline
 	push qword 0x8
 	push rax
-	o64 retf
+	retf
 .trampoline:
 	ret
 

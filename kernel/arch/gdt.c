@@ -4,8 +4,6 @@
 #include "arch/gdt.h"
 #include "arch/arch.h"
 
-extern int __memory_offset;
-
 static ALIGN(8) gdt_desc desc = { 0 };
 static ALIGN(8) gdt_entry entries[5] = { 0 };
 
@@ -33,5 +31,7 @@ void gdt_init() {
 	desc.size = sizeof(entries) - 1;
 	desc.base = (uint64_t) &entries;
 
-	arch_load_gdt(((uint64_t) &desc) - __memory_offset);
+	uint64_t gdt_addr = ((uint64_t) &desc) - __memory_offset;
+	log("gdt descriptor at 0x%llx", gdt_addr);
+	arch_load_gdt(gdt_addr);
 }

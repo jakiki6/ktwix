@@ -19,6 +19,9 @@ void kmain(boot_info *handover) {
 
 	module("boot");
 
+	log("ktwix 0.01");
+	log("memory offset: 0x%llx", __memory_offset);
+
 	// setup serial in case of a panic
 	serial_init();
 
