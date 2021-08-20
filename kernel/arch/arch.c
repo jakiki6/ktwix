@@ -34,11 +34,6 @@ void arch_halt() {
 	}
 }
 
-void arch_reboot() {
-	arch_outb(0x0cf9, 0x0e);
-	arch_halt();
-}
-
 void arch_interrupts_enable() {
         asm volatile("sti");
 }

@@ -20,3 +20,19 @@ global arch_load_idt
 arch_load_idt:
 	lidt [rdi]
 	ret
+
+global arch_reboot
+arch_reboot:
+	lidt [fake_idt_desc]
+	int 0x69
+
+	mov dx, 0x0cf9
+	mov al, 0x0e
+	out dx, al
+
+	jmp 0xffff0
+
+section .data
+fake_idt_desc:
+	db 0
+	dq 0
