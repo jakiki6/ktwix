@@ -1,6 +1,5 @@
 #include <stdint.h>
 #include <klib/klib.h>
-#include <macros.h>
 
 #include "arch/arch.h"
 #include "logging.h"

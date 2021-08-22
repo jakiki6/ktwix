@@ -3,8 +3,6 @@
 #include <klib/klib.h>
 #include <klib/memutils.h>
 
-#include <macros.h>
-
 #include "kmalloc.h"
 
 static uint8_t *kmalloc_map;
