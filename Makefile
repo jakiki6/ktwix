@@ -5,7 +5,7 @@ all: run
 run: os.img
 	@echo Booting system
 	@rm log.txt 2> /dev/null || true
-	@qemu-system-x86_64 -s -enable-kvm -m 4G -drive format=raw,file=$< -D log.txt -d cpu_reset,int -serial stdio
+	@qemu-system-x86_64 -s -enable-kvm -m 256M -drive format=raw,file=$< -D log.txt -d cpu_reset,int -serial stdio
 
 kernel_all:
 	@echo Making kernel

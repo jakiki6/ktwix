@@ -18,7 +18,7 @@ void kmalloc_init(struct stivale2_mmap_entry *memory_map, size_t memory_entries)
 		if (entry.type != STIVALE2_MMAP_USABLE)
 			continue;
 
-//		memset((void *) entry.base, 0, entry.length);
+		memset((void *) entry.base, 0, entry.length);
 
 		uint64_t top = entry.base + entry.length;
 
@@ -74,19 +74,24 @@ void *kmalloc_allocate_pages(size_t count) {
 	size_t index = last_used_index;
 	size_t runs = 0;
 	size_t hits = 0;
+	size_t page = index;
 	while (runs < (highest_page - MEM_OFFSET) / PAGE_SIZE) {
 		if (GETBIT(index) == false) {
+			if (page == (size_t) -1) {
+				page = index;
+			}
+
 			if (hits++ == count) {
-				size_t page = (index - count) % ((highest_page - MEM_OFFSET) / PAGE_SIZE);
-				for (size_t i = 0; i < ((index - last_used_index) % ((highest_page - MEM_OFFSET) / PAGE_SIZE)); i++) {
+				for (size_t i = 0; i < count; i++) {
 					SETBIT(i + page);
 				}
-				//debug("allocated page at address %llx", page * PAGE_SIZE + MEM_OFFSET);
+				debug("allocated %u page(s) at address 0x%llx", count, page * PAGE_SIZE + MEM_OFFSET);
 				last_used_index = index;
 				return (void *) (page * PAGE_SIZE + MEM_OFFSET);
 			}
 		} else {
 			hits = 0;
+			page = -1;
 		}
 		index++;
 		index = index % ((highest_page - MEM_OFFSET) / PAGE_SIZE);
@@ -121,8 +126,9 @@ void kmalloc_free_page(void *address) {
 void kmalloc_free_pages(void *address, size_t count) {
 	uint64_t start_page = (uint64_t) address / PAGE_SIZE;
 
-	for (size_t i = start_page; i < start_page + count; i++) {
-		CLEARBIT(i);
+	for (size_t i = 0; i < count; i++) {
+		CLEARBIT(i + start_page);
+		debug("freed page at address 0x%llx", start_page * PAGE_SIZE + MEM_OFFSET);
 	}
 }
 
