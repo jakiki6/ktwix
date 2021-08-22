@@ -124,7 +124,7 @@ void kmalloc_free_page(void *address) {
 }
 
 void kmalloc_free_pages(void *address, size_t count) {
-	uint64_t start_page = (uint64_t) address / PAGE_SIZE;
+	uint64_t start_page = (uint64_t) (address - MEM_OFFSET) / PAGE_SIZE;
 
 	for (size_t i = 0; i < count; i++) {
 		CLEARBIT(i + start_page);
