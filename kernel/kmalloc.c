@@ -128,8 +128,9 @@ void kmalloc_free_pages(void *address, size_t count) {
 
 	for (size_t i = 0; i < count; i++) {
 		CLEARBIT(i + start_page);
-		debug("freed page at address 0x%llx", start_page * PAGE_SIZE + MEM_OFFSET);
 	}
+
+	debug("freed %u page(s) at 0x%llu", count, address);
 }
 
 uint8_t *kmalloc_get_map() {
