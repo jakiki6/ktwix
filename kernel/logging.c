@@ -19,13 +19,13 @@ void logging_log(char *msg) {
 }
 
 void logging_panic(char *msg) {
-        serial_write_string(mod_name);
-	serial_write_string(": ");
-	serial_write_string("panic: ");
-	serial_write_string(msg);
-	serial_write_string("\n");
+        serial_write_string("\nPANIC: ");
+	serial_write_string(mod_name);
+        serial_write_string(": ");
+        serial_write_string(msg);
+        serial_write_string("\n");
 
-	arch_reboot();
+	arch_halt();
 }
 
 void logging_module(char *name) {

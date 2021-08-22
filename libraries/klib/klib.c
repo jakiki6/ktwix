@@ -50,6 +50,7 @@ void panic(const char* format, ...) {
 	vsnprintf((char *) &print_buffer, (size_t) -1, format, args);
 	va_end(args);
 	logging_panic((char *) &print_buffer);
+	for (;;);
 }
 
 void log(const char* format, ...) {

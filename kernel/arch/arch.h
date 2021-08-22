@@ -6,7 +6,7 @@ void arch_outw(uint16_t port, uint16_t val);
 uint8_t arch_inb(uint16_t port);
 uint16_t arch_inw(uint16_t port);
 
-void arch_halt();
+void __attribute__((noreturn)) arch_halt();
 void arch_reboot();
 
 void arch_interrupts_enable();

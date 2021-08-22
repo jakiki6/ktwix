@@ -18,6 +18,8 @@ void kmalloc_init(struct stivale2_mmap_entry *memory_map, size_t memory_entries)
 		if (entry.type != STIVALE2_MMAP_USABLE)
 			continue;
 
+//		memset((void *) entry.base, 0, entry.length);
+
 		uint64_t top = entry.base + entry.length;
 
 		if (top > highest_page)
@@ -88,10 +90,12 @@ void *kmalloc_allocate_pages(size_t count) {
 		}
 		index++;
 		index = index % ((highest_page - MEM_OFFSET) / PAGE_SIZE);
+		runs++;
 	}
 
-	last_used_index = index;
-	return (void *) 0;
+	module("kmalloc");
+	panic("Out of memory (ranboo moment)");
+	for (;;);
 }
 
 void *kmalloc_callocate_page() {
