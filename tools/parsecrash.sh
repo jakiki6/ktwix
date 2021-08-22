@@ -9,4 +9,5 @@ if [ -z "$ADDR" ]; then
 	exit 1
 fi
 
+echo 0x$ADDR
 addr2line -e ../kernel/kernel.elf $ADDR

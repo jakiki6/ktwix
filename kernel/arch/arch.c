@@ -106,13 +106,6 @@ void arch_set_cr3(uint64_t pointer) {
 	asm volatile ("mov %0, %%cr3" : "=r"(pointer));
 }
 
-void arch_invalidate_cr3() {
-	asm volatile (
-		"mov %cr3, %rax;"
-		"mov %rax, %cr3;"
-	);
-}
-
 void arch_wrmsr(uint64_t msr, uint64_t value) {
 	uint32_t low = value & 0xFFFFFFFF;
 	uint32_t high = value >> 32;
@@ -133,25 +126,3 @@ uint64_t arch_rdmsr(uint64_t msr) {
 	return ((uint64_t) high << 32) | low;
 }
 
-void arch_set_code_segment(uint8_t value) {
-	asm volatile (
-		"pushq %%rax;"
-		"pushq $set_cs;"
-		"lretq;"
-		"set_cs:"
-		:
-		: "a"(value)
-	);
-}
-
-void arch_set_data_segments(uint8_t value) {
-        asm volatile (  
-                "mov %%ax, %%ds;"
-                "mov %%ax, %%es;"
-                "mov %%ax, %%ss;"
-                "mov %%ax, %%fs;"
-                "mov %%ax, %%gs;"
-                :
-                : "a"(value)
-        );
-}
