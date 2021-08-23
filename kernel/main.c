@@ -40,9 +40,6 @@ void kmain(boot_info *handover) {
 	log("init kmalloc");
 	kmalloc_init(handover->memory_map->memmap, handover->memory_entries);
 
-	kfree(NULL);
-	for (;;) kmalloc_allocate_page();
-
 	// setup paging
 	log("init paging");
 	paging_init(handover);
