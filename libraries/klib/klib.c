@@ -37,6 +37,10 @@ void *kcalloc(size_t size) {
 }
 
 void kfree(void *address) {
+	if (address == 0) {
+		panic("NULL was freed (I see no POINTer in this)");
+	}
+
 	address = address - sizeof(heap_data);
 
 	heap_data *meta = (heap_data *) address;
