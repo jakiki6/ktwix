@@ -44,7 +44,6 @@ static char *get_witty_comment() {
 }
 
 void logging_debug(char *msg) {
-	return;
 	serial_write_string(mod_name);
         serial_write_string(": ");
         serial_write_string("debug: ");

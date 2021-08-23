@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdint.h>
 
 #define HIGH_OFFSET 0xffff800000000000

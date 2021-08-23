@@ -1,3 +1,5 @@
+#pragma once
+
 void serial_init();
 int serial_received();
 char serial_read();

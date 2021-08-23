@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdint.h>
 
 void arch_outb(uint16_t port, uint8_t val);
