@@ -85,6 +85,6 @@ void paging_init(boot_info *handover) {
 
 	log("finished mapping pages");
 
-	arch_set_cr3((uint64_t) kernel_map->pml4);
+	arch_set_cr3((uint64_t) kernel_map->pml4 - MEM_OFFSET);
 	module("boot");
 }

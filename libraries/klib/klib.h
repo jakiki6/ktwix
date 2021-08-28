@@ -10,7 +10,7 @@
 #define CREATE(x) ((x *) kcalloc(sizeof(x)))
 #define ARRAY_LENGTH(x) (sizeof(x) / sizeof(x[0]))
 
-#define __memory_offset 0xffffffff80000000
+#define MEM_OFFSET 0xffffffff80000000
 
 typedef struct {
         size_t pages;

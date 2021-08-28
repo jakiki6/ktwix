@@ -26,12 +26,12 @@ void gdt_init() {
 	entries[1] = bake_entry(GDT_PRESENT | GDT_SEGMENT | GDT_READWRITE | GDT_EXECUTABLE, GDT_LONG_MODE_GRANULARITY);
 	entries[2] = bake_entry(GDT_PRESENT | GDT_SEGMENT | GDT_READWRITE, 0);
 	entries[3] = bake_entry(GDT_PRESENT | GDT_SEGMENT | GDT_READWRITE | GDT_EXECUTABLE | GDT_USER, GDT_LONG_MODE_GRANULARITY);
-        entries[4] = bake_entry(GDT_PRESENT | GDT_SEGMENT | GDT_READWRITE | GDT_USER, 0);
+	entries[4] = bake_entry(GDT_PRESENT | GDT_SEGMENT | GDT_READWRITE | GDT_USER, 0);
 
 	desc.size = sizeof(entries) - 1;
-	desc.base = (uint64_t) &entries;
+	desc.base = (uint64_t) &entries - MEM_OFFSET;
 
-	uint64_t gdt_addr = ((uint64_t) &desc) - __memory_offset;
+	uint64_t gdt_addr = ((uint64_t) &desc) - MEM_OFFSET;
 	log("gdt descriptor at 0x%llx", gdt_addr);
 	arch_load_gdt(gdt_addr);
 }

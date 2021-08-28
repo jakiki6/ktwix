@@ -1,7 +1,6 @@
 #pragma once
 
 #define PAGE_SIZE 4096
-#define MEM_OFFSET __memory_offset
 #define SETBIT(i) kmalloc_map[i / 8] = kmalloc_map[i / 8] | (1 << (i % 8))
 #define CLEARBIT(i) kmalloc_map[i / 8] = kmalloc_map[i / 8] & (~(1 << (i % 8)))
 #define GETBIT(i) kmalloc_map[i / 8] << (i & 7)

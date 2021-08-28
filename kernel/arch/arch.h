@@ -44,3 +44,5 @@ uint64_t arch_rdmsr(uint64_t msr_id);
 
 void arch_set_code_segment(uint8_t value);
 void arch_set_data_segments(uint8_t value);
+
+void arch_isr_notimplemented();

@@ -18,5 +18,5 @@ typedef struct {
 	uint32_t zero;     // reserved
 } __attribute__((packed)) idt_entry;
 
-void register_interrupt(uint64_t handler, uint8_t number, bool user);
+void register_interrupt(uint64_t handler, uint8_t number, bool trap, bool user);
 void interrupts_init();

@@ -1,4 +1,43 @@
 bits 64
+
+%macro isr_entry 0
+	push rax
+	push rbx
+	push rcx
+	push rdx
+	push rsi
+	push rdi
+	push rbp
+	push r8
+	push r9
+	push r10
+	push r11
+	push r12
+	push r13
+	push r14
+	push r15
+
+	cld
+%endmacro
+%macro isr_exit 0
+	pop r15
+	pop r14
+	pop r13
+	pop r12
+	pop r11
+	pop r10
+	pop r9
+	pop r8
+	pop rbp
+	pop rdi
+	pop rsi
+	pop rdx
+	pop rcx
+	pop rbx
+	pop rax
+	iretq
+%endmacro
+
 section .text
 
 global arch_load_gdt
@@ -32,7 +71,18 @@ arch_reboot:
 
 	jmp 0xffff0
 
+global arch_isr_notimplemented
+extern log
+arch_isr_notimplemented:
+	isr_entry
+
+	mov rdi, msg
+	call log
+
+	isr_exit
+
 section .data
 fake_idt_desc:
 	db 0
 	dq 0
+msg:	db "E"

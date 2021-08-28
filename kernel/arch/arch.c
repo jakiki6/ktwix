@@ -94,14 +94,6 @@ void arch_write_cr4(uint64_t val) {
         asm volatile ("mov %0, %%cr4" : "=r"(val)); 
 }
 
-void arch_enable_paging() {
-	arch_write_cr0(arch_read_cr0() | (1 << 31));
-}
-
-void arch_disable_paging() {
-	arch_write_cr0(arch_read_cr0() & ~(1 << 31));
-}
-
 void arch_set_cr3(uint64_t pointer) {
 	asm volatile ("mov %0, %%cr3" : "=r"(pointer));
 }
