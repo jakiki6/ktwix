@@ -32,9 +32,8 @@ void interrupts_init() {
 		register_interrupt((uint64_t) &arch_isr_notimplemented, i, false, false);
 	}
 
-	uint64_t idt_addr = ((uint64_t) &desc) - MEM_OFFSET;
-	log("gdt descriptor at 0x%llx", idt_addr);
-	arch_load_idt(idt_addr);
+	log("gdt descriptor at 0x%llx", (uint64_t) &desc);
+	arch_load_idt((uint64_t) &desc);
 
 	arch_interrupts_enable();
 }

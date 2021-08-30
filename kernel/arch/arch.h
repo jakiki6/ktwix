@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <klib/klib.h>
 
 void arch_outb(uint16_t port, uint8_t val);
 void arch_outw(uint16_t port, uint16_t val);
@@ -46,3 +47,6 @@ void arch_set_code_segment(uint8_t value);
 void arch_set_data_segments(uint8_t value);
 
 void arch_isr_notimplemented();
+
+void spinlock_lock(spinlock_t *lock);
+void spinlock_release(spinlock_t *lock);

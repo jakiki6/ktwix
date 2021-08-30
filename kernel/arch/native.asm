@@ -71,6 +71,21 @@ arch_reboot:
 
 	jmp 0xffff0
 
+global spinlock_lock
+spinlock_lock:
+	lock bts qword [rdi], 0
+	jc .spin
+	ret
+.spin:	pause
+	test qword [rdi], 1
+	jnz .spin
+	jmp spinlock_lock
+
+global spinlock_release
+spinlock_release:
+	lock btr qword [rdi], 0
+	ret
+
 global arch_isr_notimplemented
 extern log
 arch_isr_notimplemented:

@@ -42,7 +42,7 @@ void kmain(boot_info *handover) {
 
 	// setup paging
 	log("init paging");
-	paging_init(handover);
+	paging_init();
 
 	log("boot completed");
 	module("kernel");

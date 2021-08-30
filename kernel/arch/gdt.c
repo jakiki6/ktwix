@@ -31,7 +31,6 @@ void gdt_init() {
 	desc.size = sizeof(entries) - 1;
 	desc.base = (uint64_t) &entries - MEM_OFFSET;
 
-	uint64_t gdt_addr = ((uint64_t) &desc) - MEM_OFFSET;
-	log("gdt descriptor at 0x%llx", gdt_addr);
-	arch_load_gdt(gdt_addr);
+	log("gdt descriptor at 0x%llx", (uint64_t) &desc);
+	arch_load_gdt((uint64_t) &desc);
 }

@@ -14,6 +14,7 @@ page_map *paging_new_pagemap() {
 
 	return pagemap;
 }
+
 static uint64_t *get_next_level(uint64_t *current, uint16_t index)
 {
 	uint64_t ret;
@@ -35,52 +36,24 @@ void paging_map_page(page_map *pagemap, uint64_t physical_address, uint64_t virt
 
 	uint64_t *pml4, *pml3, *pml2, *pml1;
 
+	spinlock_lock(&pagemap->lock);
 	pml4 = (void *) pagemap->pml4;
-
 	pml3 = get_next_level(pml4, level4);
-
-        pml2 = get_next_level(pml3, level3);
-
+	pml2 = get_next_level(pml3, level3);
 	pml1 = get_next_level(pml2, level2);
-
 	pml1[level1] = physical_address | flags;
+	spinlock_release(&pagemap->lock);
 }
 
-void paging_init(boot_info *handover) {
+void paging_init() {
 	module("paging");
 
 	page_map *kernel_map = paging_new_pagemap();
 	log("kernel page map is at 0x%llx", kernel_map);
 
-	uint64_t pages = handover->memory_usable / PAGE_SIZE;
-	uint64_t needed_l1 = UD(pages, 512);
-	uint64_t needed_l2 = UD(needed_l1, 512);
-	uint64_t needed_l3 = UD(needed_l2, 512);
-
-	uint64_t l1_area = (uint64_t) kmalloc_callocate_pages(needed_l1);
-	uint64_t l2_area = (uint64_t) kmalloc_callocate_pages(needed_l2);
-	uint64_t l3_area = (uint64_t) kmalloc_callocate_pages(needed_l3);
-
-	for (uint64_t l4_index = 0x1ff; l4_index < (needed_l3 + 0x1ff); l4_index++) {
-		kernel_map->pml4[l4_index] = l3_area;
-		l3_area = l3_area + PAGE_SIZE;
-
-		uint64_t *pml3 = (uint64_t *) kernel_map->pml4[l4_index];
-		for (uint64_t l3_index = 0x1fe; l3_index < (needed_l2 + 0x1fe); l3_index++) {
-			pml3[l3_index] = l2_area;
-			l2_area = l2_area + PAGE_SIZE;
-
-			uint64_t *pml2 = (uint64_t *) pml3[l3_index];
-        	        for (uint64_t l2_index = 0; l2_index < needed_l1; l2_index++) {
-                	        pml2[l2_index] = l1_area;
-				l1_area = l1_area + PAGE_SIZE;
-
-	                        uint64_t *pml1 = (uint64_t *) pml2[l2_index];
-                	        for (uint64_t l1_index = 0; l1_index < 512; l1_index++) {
-        	                        pml1[l1_index] = l4_index << 39 | l3_index << 30 | l2_index << 21 | l1_index << 12 | 0b11;
-                        	}
-	                }
-		}
+	for (uint64_t page = 0; page < 0x7fffffff; page = page + 4096) {
+		paging_map_page(kernel_map, page, page + MEM_OFFSET, 0b11);
+//		debug("%llx -> %llx", page, page + MEM_OFFSET);
 	}
 
 	log("finished mapping pages");

@@ -16,6 +16,8 @@ typedef struct {
         size_t pages;
 } heap_data;
 
+typedef ALIGN(8) uint64_t spinlock_t;
+
 void *kmalloc(size_t size);
 void *kcalloc(size_t size);
 void kfree(void *address);
